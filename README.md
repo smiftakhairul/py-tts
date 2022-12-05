@@ -1,5 +1,5 @@
 ## Text-to-Speech (TTS)
-**Text-to-Speech** from `.xlsx` files and generate `.mp3` or `.wav` audio files using `python`. This program uses api from [soundoftext](https://soundoftext.com/) for tts.
+**Text-to-Speech** from `.xlsx` files and generate `.mp3` or `.wav` audio files using `python`. This program uses api from [Google Translate](https://translate.google.com/) for tts. You can also choose `gTTs` python library.
 
 > Sound of Text creates MP3 audio files from text and allows you to download them or play them in the browser — using the text to speech engine from Google Translate.
 
@@ -12,3 +12,4 @@
 1. If you're using **linux/osx**, make sure `ffmpeg` installed in system.
 2. `openpyxl`
 3. `pydub`
+4. `gTTs`

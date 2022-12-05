@@ -1,4 +1,21 @@
-import os, sys, openpyxl, requests, json, pydub
+import os, sys, openpyxl, requests, pydub
+from gtts import gTTS
+
+def saveTts(text, filePath, type = "api"): # type = api/gtts
+    try:
+        if type == "api":
+            response = requests.get("https://translate.google.com/translate_tts", params = {
+                "ie": "UTF-8",
+                "q": text,
+                "tl": "bn-BD",
+                "client": "tw-ob",
+            })
+            open(filePath, "wb").write(response.content)
+        else:
+            tts = gTTS(text, lang = "bn")
+            tts.save(filePath)
+    except:
+        pass
 
 excelPath = str(input("Enter EXCEL directory path or press Enter for default: ") or "files/xlsx/")
 mp3Path = str(input("Enter MP3 directory path or press Enter for default: ") or "files/mp3/")
@@ -10,9 +27,6 @@ if not os.path.exists(excelPath) or not os.path.exists(mp3Path) or not os.path.e
 
 index = 0
 activeSheet = "Sheet1"
-apiUrl = "https://api.soundoftext.com/sounds"
-headers =  {"Content-Type": "application/json"}
-payload = {"data": {"voice": "bn-BD"}, "engine": "Google"}
 for file in os.listdir(excelPath):
     if file.endswith(".xlsx"):
         data = openpyxl.load_workbook(excelPath + file, data_only = True)
@@ -23,13 +37,7 @@ for file in os.listdir(excelPath):
             if col.value is not None:
                 rowIndex += 1
                 try:
-                    payload["data"]["text"] = col.value
-                    response = requests.post(apiUrl, data = json.dumps(payload), headers = headers)
-                    speechId = response.json()["id"]
-                    response = requests.get(f'{apiUrl}/{speechId}')
-                    mp3File = response.json()["location"]
-                    response = requests.get(mp3File)
-                    open(f'{mp3Path}{rowIndex}.mp3', "wb").write(response.content)
+                    saveTts(col.value, f'{mp3Path}{rowIndex}.mp3')
                 except:
                     pass
         index = rowIndex
